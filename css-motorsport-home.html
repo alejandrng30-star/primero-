@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CSS Motorsport – Encuentra tu Auto Ideal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:ital,wght@1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --black:   #0a0a0c;
+      --dark:    #111116;
+      --surface: #18181f;
+      --border:  #2a2a35;
+      --accent:  #e8c84a;   /* gold */
+      --red:     #d63e3e;
+      --white:   #f0ede8;
+      --muted:   #7a7a8a;
+      --card-bg: #14141a;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--black);
+      color: var(--white);
+      min-width: 1100px;
+      overflow-x: hidden;
+    }
+
+    /* ─── NOISE OVERLAY ─── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0.35;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: sticky; top: 0; z-index: 900;
+      display: flex; align-items: center;
+      padding: 0 56px;
+      height: 72px;
+      background: rgba(10,10,12,0.92);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none; margin-right: auto;
+    }
+    .logo-icon {
+      width: 40px; height: 40px;
+      background: var(--accent);
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .logo-icon svg { width: 22px; height: 22px; fill: var(--black); }
+    .logo-text { font-family: 'Bebas Neue', cursive; font-size: 26px; letter-spacing: 2px; color: var(--white); }
+    .logo-text span { color: var(--accent); }
+
+    .nav-links { display: flex; gap: 4px; }
+    .nav-links a {
+      font-size: 13px; font-weight: 500; letter-spacing: 0.5px;
+      color: var(--muted); text-decoration: none;
+      padding: 8px 16px; border-radius: 6px;
+      transition: color .2s, background .2s;
+    }
+    .nav-links a:hover { color: var(--white); background: var(--surface); }
+    .nav-links a.active { color: var(--accent); }
+
+    .nav-cta {
+      margin-left: 20px;
+      padding: 9px 22px;
+      background: var(--accent);
+      color: var(--black);
+      font-size: 13px; font-weight: 600; letter-spacing: 0.4px;
+      border: none; border-radius: 6px; cursor: pointer;
+      transition: opacity .2s;
+      text-decoration: none;
+    }
+    .nav-cta:hover { opacity: .85; }
+
+    /* ─── HERO ─── */
+    .hero {
+      position: relative;
+      height: 620px;
+      display: flex; align-items: center;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute; inset: 0;
+      background:
+        linear-gradient(105deg, rgba(10,10,12,0.95) 38%, rgba(10,10,12,0.55) 65%, rgba(10,10,12,0.2) 100%),
+        url('https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=1600&q=80') center/cover no-repeat;
+    }
+
+    /* subtle animated gradient accent */
+    .hero-glow {
+      position: absolute; bottom: -60px; left: 260px;
+      width: 500px; height: 300px;
+      background: radial-gradient(ellipse, rgba(232,200,74,0.12) 0%, transparent 70%);
+      animation: pulse 4s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:.6} 50%{opacity:1} }
+
+    .hero-content {
+      position: relative; z-index: 2;
+      padding: 0 80px;
+      max-width: 640px;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 11px; font-weight: 600; letter-spacing: 2.5px;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 20px;
+    }
+    .hero-eyebrow::before {
+      content: ''; display: block;
+      width: 28px; height: 2px; background: var(--accent);
+    }
+
+    .hero h1 {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 88px; line-height: 0.9;
+      letter-spacing: 1px;
+      color: var(--white);
+      margin-bottom: 24px;
+    }
+    .hero h1 em {
+      font-style: normal; color: var(--accent);
+    }
+
+    .hero p {
+      font-size: 16px; line-height: 1.65; color: rgba(240,237,232,.65);
+      margin-bottom: 40px; max-width: 440px;
+    }
+
+    .hero-actions { display: flex; gap: 14px; align-items: center; }
+
+    .btn-primary {
+      padding: 14px 34px;
+      background: var(--accent); color: var(--black);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px; font-weight: 700; letter-spacing: 0.5px;
+      border: none; border-radius: 8px; cursor: pointer;
+      transition: transform .15s, box-shadow .2s;
+      text-decoration: none; display: inline-block;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(232,200,74,0.35); }
+
+    .btn-ghost {
+      padding: 14px 28px;
+      background: transparent; color: var(--white);
+      font-size: 14px; font-weight: 500;
+      border: 1px solid var(--border); border-radius: 8px;
+      cursor: pointer; transition: border-color .2s, color .2s;
+      text-decoration: none; display: inline-block;
+    }
+    .btn-ghost:hover { border-color: var(--white); }
+
+    /* hero stats bar */
+    .hero-stats {
+      position: absolute; bottom: 0; left: 0; right: 0; z-index: 2;
+      display: flex;
+      border-top: 1px solid var(--border);
+      background: rgba(10,10,12,0.82);
+      backdrop-filter: blur(14px);
+    }
+    .stat-item {
+      flex: 1; padding: 22px 40px;
+      border-right: 1px solid var(--border);
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-num {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 36px; color: var(--accent); letter-spacing: 1px;
+    }
+    .stat-label {
+      font-size: 12px; color: var(--muted); letter-spacing: 0.5px; margin-top: 2px;
+    }
+
+    /* ─── SECTION HEADER ─── */
+    .section-header {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      margin-bottom: 36px;
+    }
+    .section-tag {
+      font-size: 11px; font-weight: 700; letter-spacing: 2.5px;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .section-title {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 48px; line-height: 1; letter-spacing: 0.5px;
+    }
+    .section-link {
+      font-size: 13px; color: var(--muted); text-decoration: none;
+      display: flex; align-items: center; gap: 6px;
+      transition: color .2s;
+    }
+    .section-link:hover { color: var(--accent); }
+    .section-link svg { transition: transform .2s; }
+    .section-link:hover svg { transform: translateX(4px); }
+
+    /* ─── VEHICLE SECTION ─── */
+    .vehicles { padding: 80px 80px 90px; }
+
+    .vehicle-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .vehicle-card {
+      position: relative;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      transition: transform .25s, border-color .25s, box-shadow .25s;
+      cursor: pointer;
+    }
+    .vehicle-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--accent);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    }
+
+    .card-image {
+      height: 220px;
+      position: relative;
+      overflow: hidden;
+    }
+    .card-image img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform .4s ease;
+    }
+    .vehicle-card:hover .card-image img { transform: scale(1.06); }
+
+    .card-badge {
+      position: absolute; top: 14px; left: 14px;
+      padding: 5px 12px;
+      font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; border-radius: 4px;
+    }
+    .badge-new   { background: var(--accent); color: var(--black); }
+    .badge-semi  { background: #3a6bff; color: #fff; }
+    .badge-used  { background: var(--surface); color: var(--muted); border: 1px solid var(--border); }
+
+    .card-body { padding: 22px 24px 24px; }
+    .card-model {
+      font-size: 11px; color: var(--muted); letter-spacing: 1px;
+      text-transform: uppercase; margin-bottom: 6px;
+    }
+    .card-name {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 28px; letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+    .card-specs {
+      display: flex; gap: 18px; margin-bottom: 20px;
+    }
+    .card-spec {
+      font-size: 12px; color: var(--muted);
+      display: flex; align-items: center; gap: 5px;
+    }
+    .card-spec svg { opacity: .5; }
+    .card-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-top: 18px; border-top: 1px solid var(--border);
+    }
+    .card-price {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 22px; color: var(--accent); letter-spacing: 0.5px;
+    }
+    .card-price small {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px; color: var(--muted);
+      letter-spacing: normal; display: block; margin-top: -2px;
+    }
+    .card-btn {
+      padding: 9px 20px;
+      background: transparent; color: var(--white);
+      font-size: 12px; font-weight: 600; letter-spacing: 0.3px;
+      border: 1px solid var(--border); border-radius: 6px;
+      cursor: pointer; transition: background .2s, border-color .2s, color .2s;
+    }
+    .card-btn:hover { background: var(--accent); border-color: var(--accent); color: var(--black); }
+
+    /* ─── SERVICES SECTION ─── */
+    .services {
+      padding: 0 80px 90px;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .service-card {
+      position: relative;
+      border-radius: 14px;
+      overflow: hidden;
+      height: 260px;
+      cursor: pointer;
+    }
+
+    .service-card img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform .4s ease;
+    }
+    .service-card:hover img { transform: scale(1.07); }
+
+    .service-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(10,10,12,.92) 0%, rgba(10,10,12,.2) 50%, transparent 100%);
+      transition: background .3s;
+    }
+    .service-card:hover .service-overlay {
+      background: linear-gradient(to top, rgba(10,10,12,.97) 0%, rgba(10,10,12,.45) 60%, rgba(10,10,12,.1) 100%);
+    }
+
+    .service-content {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 28px 26px;
+    }
+    .service-icon {
+      width: 42px; height: 42px;
+      background: var(--accent); border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 12px;
+    }
+    .service-icon svg { width: 22px; height: 22px; fill: var(--black); }
+    .service-name {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 26px; letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+    .service-desc {
+      font-size: 12px; color: rgba(240,237,232,.55);
+      line-height: 1.5;
+      max-height: 0; overflow: hidden;
+      transition: max-height .35s ease, opacity .35s;
+      opacity: 0;
+    }
+    .service-card:hover .service-desc { max-height: 60px; opacity: 1; }
+
+    .service-arrow {
+      position: absolute; top: 18px; right: 18px;
+      width: 36px; height: 36px;
+      background: rgba(255,255,255,.08); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .2s, transform .2s;
+    }
+    .service-card:hover .service-arrow {
+      background: var(--accent); transform: rotate(45deg);
+    }
+    .service-arrow svg { fill: var(--white); width: 14px; }
+    .service-card:hover .service-arrow svg { fill: var(--black); }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 80px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .footer-logo {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 20px; letter-spacing: 2px;
+    }
+    .footer-logo span { color: var(--accent); }
+    .footer-copy {
+      font-size: 12px; color: var(--muted);
+    }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a {
+      font-size: 12px; color: var(--muted); text-decoration: none;
+      transition: color .2s;
+    }
+    .footer-links a:hover { color: var(--white); }
+
+    /* ─── SCROLL ANIMATION ─── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .fade-up:nth-child(2) { transition-delay: .1s; }
+    .fade-up:nth-child(3) { transition-delay: .2s; }
+  </style>
+</head>
+<body>
+
+  <!-- ─── NAVBAR ─── -->
+  <nav>
+    <a class="logo" href="#">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2L3 7v5c0 5.5 3.8 10.7 9 12 5.2-1.3 9-6.5 9-12V7L12 2z"/></svg>
+      </div>
+      <span class="logo-text"><span>CSS</span> Motorsport</span>
+    </a>
+    <div class="nav-links">
+      <a href="#" class="active">Inicio</a>
+      <a href="#">Nuevos</a>
+      <a href="#">Seminuevos</a>
+      <a href="#">Usados</a>
+      <a href="#">Finanzas</a>
+      <a href="#">Taller</a>
+      <a href="#">Contacto</a>
+    </div>
+    <a href="#" class="nav-cta">Cotizar Ahora</a>
+  </nav>
+
+  <!-- ─── HERO ─── -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-glow"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">Concesionaria Premium</div>
+      <h1>Encuentra<br>tu <em>Auto</em><br>Ideal</h1>
+      <p>Más de 300 vehículos disponibles. Nuevos, seminuevos y usados certificados con las mejores condiciones de financiamiento del mercado.</p>
+      <div class="hero-actions">
+        <a href="#vehiculos" class="btn-primary">Ver Vehículos</a>
+        <a href="#" class="btn-ghost">Agendar Prueba</a>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-num">300+</div>
+        <div class="stat-label">Vehículos en Stock</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">15</div>
+        <div class="stat-label">Marcas Disponibles</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">98%</div>
+        <div class="stat-label">Clientes Satisfechos</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">12+</div>
+        <div class="stat-label">Años de Experiencia</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── VEHÍCULOS ─── -->
+  <section class="vehicles" id="vehiculos">
+    <div class="section-header">
+      <div>
+        <div class="section-tag">Catálogo</div>
+        <div class="section-title">Nuestros Vehículos</div>
+      </div>
+      <a href="#" class="section-link">
+        Ver todos
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+
+    <div class="vehicle-grid">
+
+      <!-- NUEVO -->
+      <div class="vehicle-card fade-up">
+        <div class="card-image">
+          <img src="https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=700&q=80" alt="Nuevo" />
+          <span class="card-badge badge-new">Nuevo</span>
+        </div>
+        <div class="card-body">
+          <div class="card-model">Toyota · 2026</div>
+          <div class="card-name">Corolla Cross GR</div>
+          <div class="card-specs">
+            <span class="card-spec">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+              2.0L Híbrido
+            </span>
+            <span class="card-spec">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 18 0 9 9 0 0 0-18 0"/><path d="m9 12 2 2 4-4"/></svg>
+              CVT Auto
+            </span>
+            <span class="card-spec">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+              5 pas.
+            </span>
+          </div>
+          <div class="card-footer">
+            <div class="card-price">
+              $489,900
+              <small>Desde $4,200/mes</small>
+            </div>
+            <button class="card-btn">Ver Detalles</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEMINUEVO -->
+      <div class="vehicle-card fade-up">
+        <div class="card-image">
+          <img src="https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?w=700&q=80" alt="Seminuevo" />
+          <span class="card-badge badge-semi">Seminuevo</span>
+        </div>
+        <div class="card-body">
+          <div class="card-model">Volkswagen · 2024</div>
+          <div class="card-name">Tiguan Highline</div>
+          <div class="card-specs">
+            <span class="card-spec">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+              1.4 TSI
+            </span>
+            <span class="card-spec">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 18 0 9 9 0 0 0-18 0"/><path d="m9 12 2 2 4-4"/></svg>
+              DSG 7vel
+            </span>
+            <span class="card-spec">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.3L12 17 5.8 21.2l2.4-7.3L2 9.4h7.6z"/></svg>
+              18,000 km
+            </span>
+          </div>
+          <div class="card-footer">
+            <div class="card-price">
+              $398,000
+              <small>Desde $3,450/mes</small>
+            </div>
+            <button class="card-btn">Ver Detalles</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- USADO -->
+      <div class="vehicle-card fade-up">
+        <div class="card-image">
+          <img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=700&q=80" alt="Usado" />
+          <span class="card-badge badge-used">Usado</span>
+        </div>
+        <div class="card-body">
+          <div class="card-model">Honda · 2022</div>
+          <div class="card-name">CR-V Sport</div>
+          <div class="card-specs">
+            <span class="card-spec">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+              1.5 Turbo
+            </span>
+            <span class="card-spec">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 18 0 9 9 0 0 0-18 0"/><path d="m9 12 2 2 4-4"/></svg>
+              CVT Auto
+            </span>
+            <span class="card-spec">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.3L12 17 5.8 21.2l2.4-7.3L2 9.4h7.6z"/></svg>
+              42,000 km
+            </span>
+          </div>
+          <div class="card-footer">
+            <div class="card-price">
+              $298,500
+              <small>Desde $2,800/mes</small>
+            </div>
+            <button class="card-btn">Ver Detalles</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ─── SERVICIOS ─── -->
+  <section class="services">
+    <div class="section-header">
+      <div>
+        <div class="section-tag">Servicios</div>
+        <div class="section-title">Nuestros Servicios</div>
+      </div>
+    </div>
+
+    <div class="services-grid">
+
+      <!-- Finanzas -->
+      <div class="service-card fade-up">
+        <img src="https://images.unsplash.com/photo-1565514158740-064f34bd6cfd?w=700&q=80" alt="Finanzas" />
+        <div class="service-overlay"></div>
+        <div class="service-arrow">
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+        <div class="service-content">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <div class="service-name">Finanzas</div>
+          <div class="service-desc">Planes de financiamiento flexibles con tasas preferenciales. Aprobación en 24 horas.</div>
+        </div>
+      </div>
+
+      <!-- Taller -->
+      <div class="service-card fade-up">
+        <img src="https://images.unsplash.com/photo-1625047509248-ec889cbff17f?w=700&q=80" alt="Taller" />
+        <div class="service-overlay"></div>
+        <div class="service-arrow">
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+        <div class="service-content">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+          </div>
+          <div class="service-name">Taller</div>
+          <div class="service-desc">Servicio técnico autorizado con mecánicos certificados y refacciones originales.</div>
+        </div>
+      </div>
+
+      <!-- Vende tu Auto -->
+      <div class="service-card fade-up">
+        <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=700&q=80" alt="Vende tu Auto" />
+        <div class="service-overlay"></div>
+        <div class="service-arrow">
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+        <div class="service-content">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24"><path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zM1 10h22M1 14h22"/></svg>
+          </div>
+          <div class="service-name">Vende tu Auto</div>
+          <div class="service-desc">Valuación gratuita en línea o en sucursal. Pago inmediato al mejor precio del mercado.</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ─── -->
+  <footer>
+    <div class="footer-logo"><span>CSS</span> Motorsport</div>
+    <div class="footer-copy">© 2026 CSS Motorsport – Todos los Derechos Reservados</div>
+    <div class="footer-links">
+      <a href="#">Aviso de Privacidad</a>
+      <a href="#">Términos</a>
+      <a href="#">Contacto</a>
+    </div>
+  </footer>
+
+  <script>
+    // fade-up on scroll
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
